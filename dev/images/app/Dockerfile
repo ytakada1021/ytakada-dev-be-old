@@ -9,7 +9,7 @@ RUN apt update && \
 
     # Laravelの動作に必要なPHP拡張をインストールする
     # 参考: https://readouble.com/laravel/9.x/ja/deployment.html
-    docker-php-ext-install bcmath
+    docker-php-ext-install bcmath pdo_mysql
 
 # zz-docker.confの設定を上書きする
 COPY ./zzz-www.conf /usr/local/etc/php-fpm.d/zzz-www.conf

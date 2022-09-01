@@ -3,7 +3,7 @@ services:
     build: ./images/web
     volumes:
       - ../laravel:/src
-      - php-fpm-socket:/var/run/php-fpm
+      - php-fpm-socket-store:/var/run/php-fpm
     ports:
       - 80:80
       - 443:443
@@ -11,7 +11,7 @@ services:
     build: ./images/app
     volumes:
       - ../laravel:/src
-      - php-fpm-socket:/var/run/php-fpm
+      - php-fpm-socket-store:/var/run/php-fpm
   db:
     build: ./images/db
     volumes:
@@ -19,5 +19,8 @@ services:
     ports:
       - 3306:3306
 volumes:
-  php-fpm-socket:
+  php-fpm-socket-store:
   db-store:
+networks:
+  default:
+    name: dev-net

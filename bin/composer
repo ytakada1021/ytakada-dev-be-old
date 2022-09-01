@@ -1,0 +1,2 @@
+#!/usr/bin/env sh
+docker run --rm --interactive --tty -v $PWD/../laravel:/app composer <command>

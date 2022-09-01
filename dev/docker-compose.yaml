@@ -1,0 +1,23 @@
+services:
+  web:
+    build: ./images/web
+    volumes:
+      - ../laravel:/src
+      - php-fpm-socket:/var/run/php-fpm
+    ports:
+      - 80:80
+      - 443:443
+  app:
+    build: ./images/app
+    volumes:
+      - ../laravel:/src
+      - php-fpm-socket:/var/run/php-fpm
+  db:
+    build: ./images/db
+    volumes:
+      - db-store:/var/lib/mysql
+    ports:
+      - 3306:3306
+volumes:
+  php-fpm-socket:
+  db-store:

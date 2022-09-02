@@ -14,6 +14,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function (Request $request) {
-    return "OK";
+Route::get('/health', function (Request $request) {
+    return "health";
 });

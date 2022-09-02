@@ -55,7 +55,7 @@ final class GetPostListQueryService
     {
         return $postsQueryResult->map(function (stdClass $post) use ($tagsQueryResult): stdClass {
             $post->tags = $tagsQueryResult
-                ->where('post_id', $post->id)
+                ->whereStrict('post_id', $post->id)
                 ->pluck('name');
 
             return $post;

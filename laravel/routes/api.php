@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\GetPost;
+use App\Http\Controllers\GetPostController;
 use App\Http\Controllers\GetPostListController;
 use Illuminate\Support\Facades\Route;
 
@@ -21,5 +21,5 @@ Route::get('/health', function () {
 
 Route::prefix('/posts')->group(function () {
     Route::get('/', GetPostListController::class);
-    Route::get('/{postId}', GetPost::class);
+    Route::get('/{postId}', GetPostController::class);
 });

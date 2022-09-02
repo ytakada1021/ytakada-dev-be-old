@@ -8,7 +8,7 @@ use Illuminate\Database\DatabaseManager;
 use Illuminate\Support\Collection;
 use stdClass;
 
-final class PostQueryService
+final class GetPostQueryService
 {
     private DatabaseManager $dbManager;
 

@@ -2,16 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Query\Services\PostQueryService;
+use App\Query\Services\GetPostQueryService;
 use Illuminate\Http\JsonResponse;
 use stdClass;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-final class GetPost extends Controller
+final class GetPostController extends Controller
 {
-    private PostQueryService $queryService;
+    private GetPostQueryService $queryService;
 
-    public function __construct(PostQueryService $queryService)
+    public function __construct(GetPostQueryService $queryService)
     {
         $this->queryService = $queryService;
     }

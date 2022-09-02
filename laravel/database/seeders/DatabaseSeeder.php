@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class DatabaseSeeder extends Seeder
 {
@@ -14,11 +15,26 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // \App\Models\User::factory(10)->create();
+        DB::table('posts')
+            ->insert([
+                'id' => 'sample-post-id',
+                'title' => 'サンプルタイトル',
+                'content' => 'サンプルコンテンツ',
+                'posted_at' => '2022-09-02 16:12:30.000000',
+                'updated_at' => '2022-09-02 16:12:30.000000',
+                'deleted_at' => null,
+            ]);
 
-        // \App\Models\User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
+        DB::table('tags')
+            ->insert([
+                [
+                    'name' => 'PHP',
+                    'post_id' => 'sample-post-id',
+                ],
+                [
+                    'name' => 'Laravel',
+                    'post_id' => 'sample-post-id',
+                ],
+            ]);
     }
 }

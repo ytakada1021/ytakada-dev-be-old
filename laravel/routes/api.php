@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\GetPost;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -17,3 +18,5 @@ use Illuminate\Support\Facades\Route;
 Route::get('/health', function (Request $request) {
     return "health";
 });
+
+Route::get('/posts/{postId}', GetPost::class);

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Command\Models\Post;
+namespace App\Command\Models\Common;
 
 use App\Command\Models\Post\Exceptions\InvalidHtmlFormatException;
 use DOMDocument;
@@ -29,6 +29,8 @@ final class Html
     private function checkHtmlFormat(string $text): void
     {
         $dom = new DOMDocument();
+
+        /** @var bool $isValidFormat */
         $isValidFormat = $dom->loadHTML($text);
 
         if ($isValidFormat) {

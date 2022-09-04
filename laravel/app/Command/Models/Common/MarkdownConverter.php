@@ -16,5 +16,5 @@ interface MarkdownConverter
     /**
      * @throws InvalidMarkdownException
      */
-    function convertToHtml(string $markdown): string;
+    function convertToHtml(string $markdown): Html;
 }

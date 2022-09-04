@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Command\Models\Post;
 
+use App\Command\Models\Common\Html;
 use App\Command\Models\Common\MarkdownConverter;
 use App\Command\Models\Post\Exceptions\InvalidMarkdownException;
 use Carbon\CarbonImmutable;
@@ -20,7 +21,6 @@ final class Post
 
     /**
      * 以下フォーマットのマークダウンテキストからPostインスタンスを生成する.
-     *
      * ```
      * ---
      * id: 'ID'
@@ -59,13 +59,13 @@ final class Post
         }
 
         // 本文をhtmlに変換する
-        /** @var string $htmlString */
-        $htmlString = $converter->convertToHtml($markdown);
+        /** @var Html $htmlString */
+        $html = $converter->convertToHtml($markdown);
 
         return new self(
             new Id($frontMatter['id']),
             new Title($frontMatter['title']),
-            new Content(new Html($htmlString)),
+            new Content($html),
             array_map(function (string $tagString): Tag {
                 return new Tag($tagString);
             }, $frontMatter['tags'])

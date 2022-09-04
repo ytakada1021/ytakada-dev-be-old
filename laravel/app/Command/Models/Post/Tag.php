@@ -12,7 +12,7 @@ final class Tag
 
     public function __construct(string $value)
     {
-        Assert::notEmpty($value, '$value cannot be empty.');
+        Assert::notEmpty($value, 'Argument cannot be empty string.');
         $this->vablue = $value;
     }
 

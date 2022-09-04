@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Query\Services;
 
 use Carbon\CarbonImmutable;
@@ -17,20 +19,16 @@ final class GetPostQueryService
         $this->dbManager = $dbManager;
     }
 
-    public function getPostOfId(string $postId): stdClass|null
+    public function getPostOfId(string $postId): ?stdClass
     {
         /** @var Collection $queryResult */
         $queryResult = $this
             ->dbConnection()
             ->table('posts')
-
             ->select('*')
-
             ->where('posts.id', $postId)
             ->whereNull('posts.deleted_at')
-
             ->leftJoin('tags', 'posts.id', '=', 'tags.post_id')
-
             ->get();
 
         if ($queryResult->isEmpty()) {

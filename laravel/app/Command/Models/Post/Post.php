@@ -13,9 +13,9 @@ use Doctrine\Common\Collections\Collection;
 
 final class Post
 {
-    private Id $id;
-    private Title $title;
-    private Content $content;
+    private PostId $id;
+    private PostTitle $title;
+    private PostContent $content;
     private Collection $tags;
     private CarbonImmutable $postedAt;
     private CarbonImmutable $updatedAt;
@@ -64,9 +64,9 @@ final class Post
         $html = $converter->convertToHtml($markdown);
 
         return new self(
-            new Id($frontMatter['id']),
-            new Title($frontMatter['title']),
-            new Content($html),
+            new PostId($frontMatter['id']),
+            new PostTitle($frontMatter['title']),
+            new PostContent($html),
             new ArrayCollection(
                 array_map(
                     function (string $tagString): Tag {
@@ -78,17 +78,17 @@ final class Post
         );
     }
 
-    public function id(): Id
+    public function id(): PostId
     {
         return $this->id;
     }
 
-    public function title(): Title
+    public function title(): PostTitle
     {
         return $this->title;
     }
 
-    public function content(): Content
+    public function content(): PostContent
     {
         return $this->content;
     }
@@ -108,7 +108,7 @@ final class Post
         return $this->updatedAt;
     }
 
-    private function __construct(Id $id, Title $title, Content $content, Collection $tags)
+    private function __construct(PostId $id, PostTitle $title, PostContent $content, Collection $tags)
     {
         // Assert::arrayOfClass($tags, Tag::class, sprintf('$tags must be array of %s.', Tag::class));
 

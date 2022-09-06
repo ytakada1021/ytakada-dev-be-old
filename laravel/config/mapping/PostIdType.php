@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Mapping;
 
-use App\Command\Models\Post\Id;
+use App\Command\Models\Post\PostId;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Types\Type;
 
@@ -31,7 +31,7 @@ final class PostIdType extends Type
         if (is_null($value)) {
             return null;
         } else {
-            return new Id($value);
+            return new PostId($value);
         }
     }
 

@@ -7,8 +7,8 @@
 
     <entity name="App\Command\Models\Post\Post" table="posts">
         <id name="id" type="post_id" />
-        <embedded name="title" class="App\Command\Models\Post\Title" use-column-prefix="false" />
-        <embedded name="content" class="App\Command\Models\Post\Content" use-column-prefix="false" />
+        <embedded name="title" class="App\Command\Models\Post\PostTitle" use-column-prefix="false" />
+        <embedded name="content" class="App\Command\Models\Post\PostContent" use-column-prefix="false" />
         <field name="postedAt" column="posted_at" type="carbon_immutable" />
         <field name="updatedAt" column="updated_at" type="carbon_immutable" />
         <many-to-many field="tags" target-entity="App\Command\Models\Post\Tag">

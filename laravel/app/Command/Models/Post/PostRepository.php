@@ -6,9 +6,9 @@ namespace App\Command\Models\Post;
 
 interface PostRepository
 {
-    function postOfId(Id $postId): ?Post;
+    function postOfId(PostId $postId): ?Post;
 
     function save(Post $post): void;
 
-    function delete(Id $postId): void;
+    function delete(PostId $postId): void;
 }

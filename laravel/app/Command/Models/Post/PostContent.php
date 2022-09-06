@@ -6,7 +6,7 @@ namespace App\Command\Models\Post;
 
 use App\Command\Models\Common\Html;
 
-final class Content
+final class PostContent
 {
     private readonly Html $value;
 

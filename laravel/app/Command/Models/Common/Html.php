@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Command\Models\Common;
 
-use App\Command\Models\Post\Exceptions\InvalidHtmlFormatException;
+use App\Command\Models\Common\Exceptions\InvalidHtmlFormatException;
 use DOMDocument;
 
 final class Html

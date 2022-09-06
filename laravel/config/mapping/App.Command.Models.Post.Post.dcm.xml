@@ -11,19 +11,6 @@
         <embedded name="content" class="App\Command\Models\Post\PostContent" use-column-prefix="false" />
         <field name="postedAt" column="posted_at" type="carbon_immutable" />
         <field name="updatedAt" column="updated_at" type="carbon_immutable" />
-        <many-to-many field="tags" target-entity="App\Command\Models\Post\Tag">
-            <cascade>
-                <cascade-all/>
-            </cascade>
-            <join-table name="posts_tags">
-                <join-columns>
-                    <join-column name="post_id" referenced-column-name="id" />
-                </join-columns>
-                <inverse-join-columns>
-                    <join-column name="tag_id" referenced-column-name="id" />
-                </inverse-join-columns>
-            </join-table>
-        </many-to-many>
     </entity>
 
 </doctrine-mapping>

@@ -19,28 +19,10 @@ class DatabaseSeeder extends Seeder
             ->insert([
                 'id' => 'sample-post-id',
                 'title' => 'サンプルタイトル',
-                'content' => 'サンプルコンテンツ',
+                'content' => '<h1>サンプルコンテンツ</h1>',
                 'posted_at' => '2022-09-02 16:12:30.000000',
                 'updated_at' => '2022-09-02 16:12:30.000000',
                 'deleted_at' => null,
-            ]);
-
-        DB::table('tags')
-            ->insert([
-                ['id' => 'Laravel'],
-                ['id' => 'PHP'],
-            ]);
-
-        DB:: table('posts_tags')
-            ->insert([
-                [
-                    'tag_id' => 'PHP',
-                    'post_id' => 'sample-post-id'
-                ],
-                [
-                    'tag_id' => 'Laravel',
-                    'post_id' => 'sample-post-id'
-                ],
             ]);
     }
 }

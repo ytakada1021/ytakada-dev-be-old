@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\CreatePostController;
+use App\Http\Controllers\CreateOrUpdatePostController;
 use App\Http\Controllers\GetPostController;
 use App\Http\Controllers\GetPostListController;
 use Illuminate\Support\Facades\Route;
@@ -22,6 +22,6 @@ Route::get('/health', function () {
 
 Route::prefix('/posts')->group(function () {
     Route::get('/', GetPostListController::class);
-    Route::post('/', CreatePostController::class);
+    Route::post('/', CreateOrUpdatePostController::class);
     Route::get('/{postId}', GetPostController::class);
 });

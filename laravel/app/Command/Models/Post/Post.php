@@ -4,13 +4,20 @@ declare(strict_types=1);
 
 namespace App\Command\Models\Post;
 
-use App\Command\Models\Common\Html;
 use App\Command\Models\Common\MarkdownConverter;
 use App\Command\Models\Post\Exceptions\InvalidMarkdownException;
 use Carbon\CarbonImmutable;
 
 final class Post
 {
+    public const MARKDOWN_FORMAT = <<<EOT
+        ---
+        title: Title of post
+        ---
+
+        Content... (in Markdown)
+    EOT;
+
     private PostId $id;
     private PostTitle $title;
     private PostContent $content;
@@ -21,7 +28,6 @@ final class Post
      * 以下フォーマットのマークダウンテキストからPostインスタンスを生成する.
      * ```
      * ---
-     * id: 'ID'
      * title: 'タイトル'
      * ---
      *
@@ -29,31 +35,73 @@ final class Post
      * ```
      * フォーマットに合わない文字列が渡された場合に`InvalidMarkdownException`を送出する.
      * @param MarkdownConverter $converter
+     * @param PostId $postId
      * @param string $markdown
      * @throws InvalidMarkdownException
      * @return self
      */
-    public static function createFromMarkdown(MarkdownConverter $converter, string $markdown): self
-    {
+    public static function createFromMarkdown(
+        MarkdownConverter $converter,
+        PostId $postId,
+        string $markdown
+    ): self {
         /** @var array $frontMatter */
         $frontMatter = $converter->extractYamlFrontMatter($markdown);
 
-        // Yaml Front Matterの書式チェックする
-        if (!is_string($frontMatter['id'])) {
-            throw new InvalidMarkdownException(sprintf("id must be set as string in yaml front matter. Entered markdown:\n%s", $markdown));
-        } elseif (!is_string($frontMatter['title'])) {
-            throw new InvalidMarkdownException(sprintf("title must be set as string in yaml front matter. Entered markdown:\n%s", $markdown));
+        if (!is_string($frontMatter['title'])) {
+            throw new InvalidMarkdownException(
+                sprintf(
+                    "title must be set as string in yaml front matter. Expected markdown text format:\n%s",
+                    self::MARKDOWN_FORMAT
+                )
+            );
         }
 
-        // 本文をhtmlに変換する
-        /** @var Html $htmlString */
-        $html = $converter->convertToHtml($markdown);
-
         return new self(
-            new PostId($frontMatter['id']),
+            $postId,
             new PostTitle($frontMatter['title']),
-            new PostContent($html)
+            new PostContent($converter->convertToHtml($markdown))
         );
+    }
+
+    public function updateFromMarkdown(
+        MarkdownConverter $converter,
+        string $markdown
+    ): void {
+        /** @var array $frontMatter */
+        $frontMatter = $converter->extractYamlFrontMatter($markdown);
+
+        if (!is_string($frontMatter['title'])) {
+            throw new InvalidMarkdownException(
+                sprintf(
+                    "title must be set as string in yaml front matter. Expected markdown text format:\n%s",
+                    self::MARKDOWN_FORMAT
+                )
+            );
+        }
+
+        $this->updateTitle($frontMatter['title']);
+        $this->updateContent(new PostContent($converter->convertToHtml($markdown)));
+    }
+
+    public function updateTitle(PostTitle $title): void
+    {
+        if ($this->title() == $title) {
+            return;
+        }
+
+        $this->title = $title;
+        $this->reflectToUpdatedAt();
+    }
+
+    public function updateContent(PostContent $content): void
+    {
+        if ($this->content() == $content) {
+            return;
+        }
+
+        $this->content = $content;
+        $this->reflectToUpdatedAt();
     }
 
     public function id(): PostId
@@ -87,6 +135,11 @@ final class Post
         $this->title = $title;
         $this->content = $content;
         $this->postedAt = CarbonImmutable::now();
+        $this->updatedAt = CarbonImmutable::now();
+    }
+
+    private function reflectToUpdatedAt(): void
+    {
         $this->updatedAt = CarbonImmutable::now();
     }
 }

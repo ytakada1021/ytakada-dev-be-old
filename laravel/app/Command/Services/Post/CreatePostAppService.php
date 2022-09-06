@@ -10,6 +10,8 @@ use App\Command\Models\Post\Exceptions\PostAlreadyExistsException;
 use App\Command\Models\Post\Post;
 use App\Command\Models\Post\PostRepository;
 use App\Command\Services\Post\CreatePostApplicationService\Input;
+use Doctrine\ORM\EntityManagerInterface;
+use Throwable;
 
 final class CreatePostAppService
 {
@@ -17,13 +19,17 @@ final class CreatePostAppService
 
     private readonly MarkdownConverter $markdownConverter;
 
+    private readonly EntityManagerInterface $entityManager;
+
     public function __construct(
         PostRepository $postRepository,
-        MarkdownConverter $markdownConverter
+        MarkdownConverter $markdownConverter,
+        EntityManagerInterface $entityManager
     )
     {
         $this->postRepository = $postRepository;
         $this->markdownConverter = $markdownConverter;
+        $this->entityManager = $entityManager;
     }
 
     /**
@@ -35,17 +41,23 @@ final class CreatePostAppService
      */
     public function execute(Input $input): Post
     {
-        $post = Post::createFromMarkdown($this->markdownConverter, $input->markdownText());
+        $this->entityManager->beginTransaction();
 
-        if (is_null($this->postRepository->postOfId($post->id()))) {
-            $this->postRepository->save($post);
+        try {
+            $post = Post::createFromMarkdown($this->markdownConverter, $input->markdownText());
 
-            return $post;
-        } else {
-            throw new PostAlreadyExistsException(sprintf(
-                "Post of id '%s' already exists.",
-                $post->id()->value()
-            ));
+            if (is_null($this->postRepository->postOfId($post->id()))) {
+                $this->postRepository->save($post);
+
+                return $post;
+            } else {
+                throw new PostAlreadyExistsException(
+                    message: sprintf("Post of id '%s' already exists.",$post->id()->value())
+                );
+            }
+        } catch (Throwable $th) {
+            $this->entityManager->rollback();
+            throw $th;
         }
     }
 }

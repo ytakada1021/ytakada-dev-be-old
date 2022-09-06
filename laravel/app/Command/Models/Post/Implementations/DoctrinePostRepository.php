@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 namespace App\Command\Models\Post\Implementations;
 
-use App\Command\Models\Post\{Post, PostId, PostRepository};
-use Carbon\CarbonImmutable;
+use App\Command\Models\Post\Post;
+use App\Command\Models\Post\PostId;
+use App\Command\Models\Post\PostRepository;
 use Doctrine\ORM\EntityManagerInterface;
 
 final class DoctrinePostRepository implements PostRepository
@@ -35,6 +36,7 @@ final class DoctrinePostRepository implements PostRepository
 
         if (!is_null($post)) {
             $this->entityManager->remove($post);
+            $this->entityManager->flush();
         }
     }
 }

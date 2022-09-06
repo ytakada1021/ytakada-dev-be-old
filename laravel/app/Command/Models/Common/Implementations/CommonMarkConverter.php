@@ -9,7 +9,6 @@ use App\Command\Models\Common\MarkdownConverter;
 use League\CommonMark\CommonMarkConverter as LeagueConverter;
 use League\CommonMark\Extension\FrontMatter\Data\SymfonyYamlFrontMatterParser;
 use League\CommonMark\Extension\FrontMatter\FrontMatterParser;
-use League\CommonMark\Extension\FrontMatter\Input\MarkdownInputWithFrontMatter;
 
 final class CommonMarkConverter implements MarkdownConverter
 {

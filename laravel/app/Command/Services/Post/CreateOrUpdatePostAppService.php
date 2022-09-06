@@ -70,6 +70,8 @@ final class CreateOrUpdatePostAppService
 
             $this->postRepository->save($post);
 
+            $this->entityManager->commit();
+
             return $post;
 
         } catch (Throwable $th) {

@@ -27,20 +27,8 @@ class DatabaseSeeder extends Seeder
 
         DB::table('tags')
             ->insert([
-                ['id' => 'Laravel'],
-                ['id' => 'PHP'],
-            ]);
-
-        DB:: table('posts_tags')
-            ->insert([
-                [
-                    'tag_id' => 'PHP',
-                    'post_id' => 'sample-post-id'
-                ],
-                [
-                    'tag_id' => 'Laravel',
-                    'post_id' => 'sample-post-id'
-                ],
+                ['id' => 'Laravel', 'post_id' => 'sample-post-id'],
+                ['id' => 'PHP', 'post_id' => 'sample-post-id'],
             ]);
     }
 }

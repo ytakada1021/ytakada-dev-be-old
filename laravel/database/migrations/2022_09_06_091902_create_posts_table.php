@@ -20,7 +20,6 @@ return new class extends Migration
             $table->mediumText('content');
             $table->dateTime('posted_at', 6);
             $table->dateTime('updated_at', 6);
-            $table->softDeletes('deleted_at', 6);
         });
         DB::statement('ALTER TABLE `posts` ADD FULLTEXT (`title`) WITH PARSER ngram');
     }

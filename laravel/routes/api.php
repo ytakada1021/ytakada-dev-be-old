@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CreateOrUpdatePostController;
+use App\Http\Controllers\DeletePostController;
 use App\Http\Controllers\GetPostController;
 use App\Http\Controllers\GetPostListController;
 use Illuminate\Support\Facades\Route;
@@ -24,4 +25,5 @@ Route::prefix('/posts')->group(function () {
     Route::get('/', GetPostListController::class);
     Route::post('/', CreateOrUpdatePostController::class);
     Route::get('/{postId}', GetPostController::class);
+    Route::delete('/{postId}', DeletePostController::class);
 });

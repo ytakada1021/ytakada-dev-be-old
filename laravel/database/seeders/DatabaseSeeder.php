@@ -22,7 +22,6 @@ class DatabaseSeeder extends Seeder
                 'content' => '<h1>サンプルコンテンツ</h1>',
                 'posted_at' => '2022-09-02 16:12:30.000000',
                 'updated_at' => '2022-09-02 16:12:30.000000',
-                'deleted_at' => null,
             ]);
     }
 }

@@ -2,6 +2,10 @@
 
 namespace App\Providers;
 
+use App\Command\Models\Common\Implementations\CommonMarkConverter;
+use App\Command\Models\Common\MarkdownConverter;
+use App\Command\Models\Post\Implementations\DoctrinePostRepository;
+use App\Command\Models\Post\PostRepository;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -13,7 +17,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        $this->app->singleton(PostRepository::class, DoctrinePostRepository::class);
+        $this->app->singleton(MarkdownConverter::class, CommonMarkConverter::class);
     }
 
     /**

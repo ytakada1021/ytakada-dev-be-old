@@ -10,7 +10,7 @@ final class Content
 {
     private readonly Html $value;
 
-    private function __construct(Html $value)
+    public function __construct(Html $value)
     {
         $this->value = $value;
     }

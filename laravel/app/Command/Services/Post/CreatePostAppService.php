@@ -11,7 +11,7 @@ use App\Command\Models\Post\Post;
 use App\Command\Models\Post\PostRepository;
 use App\Command\Services\Post\CreatePostApplicationService\Input;
 
-final class CreatePostApplicationService
+final class CreatePostAppService
 {
     private readonly PostRepository $postRepository;
 
@@ -43,7 +43,7 @@ final class CreatePostApplicationService
             return $post;
         } else {
             throw new PostAlreadyExistsException(sprintf(
-                'Post of id %s already exists.',
+                "Post of id '%s' already exists.",
                 $post->id()->value()
             ));
         }

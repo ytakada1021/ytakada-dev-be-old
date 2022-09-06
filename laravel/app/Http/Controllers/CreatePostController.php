@@ -7,33 +7,33 @@ namespace App\Http\Controllers;
 use App\Command\Models\Post\Exceptions\InvalidMarkdownException;
 use App\Command\Models\Post\Exceptions\PostAlreadyExistsException;
 use App\Command\Models\Post\Post;
-use App\Command\Services\Post\CreatePostApplicationService;
 use App\Command\Services\Post\CreatePostApplicationService\Input;
+use App\Command\Services\Post\CreatePostAppService;
+use App\Http\Requests\CreatePostRequest;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 final class CreatePostController extends Controller
 {
-    private readonly CreatePostApplicationService $applicationService;
+    private readonly CreatePostAppService $appService;
 
-    public function __construct(CreatePostApplicationService $applicationService)
+    public function __construct(CreatePostAppService $appService)
     {
-        $this->applicationService = $applicationService;
+        $this->appService = $appService;
     }
 
-    public function __invoke(Request $request): JsonResponse
+    public function __invoke(CreatePostRequest $request): JsonResponse
     {
         try {
             /** @var Post $domainModel */
             $domainModel = $this
-                ->applicationService
-                ->execute(new Input('sample'));
+                ->appService
+                ->execute(new Input($request->file('post')->get()));
         } catch (InvalidMarkdownException $e) {
             // TODO: エラーメッセージへの変換処理
-            throw new BadRequestHttpException();
+            throw new BadRequestHttpException($e->getMessage());
         } catch (PostAlreadyExistsException $e) {
-            throw new BadRequestHttpException();
+            throw new BadRequestHttpException($e->getMessage());
         }
 
         // TODO: APIモデルへの変換

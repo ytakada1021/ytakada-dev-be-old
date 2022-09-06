@@ -8,16 +8,15 @@ use Util\Assert;
 
 final class Tag
 {
-    private readonly string $value;
+    private TagId $id;
 
-    public function __construct(string $value)
+    public function __construct(TagId $id)
     {
-        Assert::notEmpty($value, 'Argument cannot be empty string.');
-        $this->vablue = $value;
+        $this->id = $id;
     }
 
-    public function value(): string
+    public function id(): TagId
     {
-        return $this->value;
+        return $this->id;
     }
 }

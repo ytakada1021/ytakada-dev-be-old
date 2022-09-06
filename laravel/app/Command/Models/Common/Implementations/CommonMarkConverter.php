@@ -6,26 +6,32 @@ namespace App\Command\Models\Common\Implementations;
 
 use App\Command\Models\Common\Html;
 use App\Command\Models\Common\MarkdownConverter;
+use League\CommonMark\CommonMarkConverter as LeagueConverter;
 use League\CommonMark\Extension\FrontMatter\Data\SymfonyYamlFrontMatterParser;
 use League\CommonMark\Extension\FrontMatter\FrontMatterParser;
 use League\CommonMark\Extension\FrontMatter\Input\MarkdownInputWithFrontMatter;
 
-final class LeagueMarkdownConverter implements MarkdownConverter
+final class CommonMarkConverter implements MarkdownConverter
 {
     public function extractYamlFrontMatter(string $markdown): array
     {
-        /** @var MarkdownInputWithFrontMatter $result */
-        $result = $this->buildFrontMatterParser()->parse($markdown);
-
-        return $result->getFrontMatter();
+        return $this
+            ->buildFrontMatterParser()
+            ->parse($markdown)
+            ->getFrontMatter();
     }
 
     public function convertToHtml(string $markdown): Html
     {
-        /** @var MarkdownInputWithFrontMatter $result */
-        $result = $this->buildFrontMatterParser()->parse($markdown);
+        /** @var string $contentWithoutFrontMatter */
+        $contentWithoutFrontMatter = $this
+            ->buildFrontMatterParser()
+            ->parse($markdown)
+            ->getContent();
 
-        return new Html($result->getContent());
+        $converter = new LeagueConverter();
+
+        return new Html($converter->convert($contentWithoutFrontMatter)->getContent());
     }
 
     private function buildFrontMatterParser(): FrontMatterParser

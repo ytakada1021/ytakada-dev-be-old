@@ -8,14 +8,15 @@ use App\Command\Models\Common\Html;
 use App\Command\Models\Common\MarkdownConverter;
 use App\Command\Models\Post\Exceptions\InvalidMarkdownException;
 use Carbon\CarbonImmutable;
-use Util\Assert;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 
 final class Post
 {
     private Id $id;
     private Title $title;
     private Content $content;
-    private array $tags;
+    private Collection $tags;
     private CarbonImmutable $postedAt;
     private CarbonImmutable $updatedAt;
 
@@ -48,7 +49,7 @@ final class Post
             throw new InvalidMarkdownException(sprintf("id must be set as string in yaml front matter. Entered markdown:\n%s", $markdown));
         } elseif (!is_string($frontMatter['title'])) {
             throw new InvalidMarkdownException(sprintf("title must be set as string in yaml front matter. Entered markdown:\n%s", $markdown));
-        } elseif (!is_array('tags', $frontMatter)) {
+        } elseif (!is_array($frontMatter)) {
             throw new InvalidMarkdownException(sprintf("tags must be set as array of strings in yaml front matter. Entered markdown:\n%s", $markdown));
         } else {
             foreach ($frontMatter['tags'] as $tag) {
@@ -66,22 +67,15 @@ final class Post
             new Id($frontMatter['id']),
             new Title($frontMatter['title']),
             new Content($html),
-            array_map(function (string $tagString): Tag {
-                return new Tag($tagString);
-            }, $frontMatter['tags'])
+            new ArrayCollection(
+                array_map(
+                    function (string $tagString): Tag {
+                        return new Tag(new TagId($tagString));
+                    },
+                    $frontMatter['tags']
+                )
+            )
         );
-    }
-
-    public function __construct(Id $id, Title $title, Content $content, array $tags)
-    {
-        Assert::arrayOfClass($tags, Tag::class, sprintf('$tags must be array of %s.', Tag::class));
-
-        $this->id = $id;
-        $this->title = $title;
-        $this->content = $content;
-        $this->tags = $tags;
-        $this->postedAt = CarbonImmutable::now();
-        $this->updatedAt = CarbonImmutable::now();
     }
 
     public function id(): Id
@@ -99,7 +93,7 @@ final class Post
         return $this->content;
     }
 
-    public function tags(): array
+    public function tags(): Collection
     {
         return $this->tags;
     }
@@ -112,5 +106,20 @@ final class Post
     public function updatedAt(): CarbonImmutable
     {
         return $this->updatedAt;
+    }
+
+    private function __construct(Id $id, Title $title, Content $content, Collection $tags)
+    {
+        // Assert::arrayOfClass($tags, Tag::class, sprintf('$tags must be array of %s.', Tag::class));
+
+        // 参照: https://www.doctrine-project.org/projects/doctrine-orm/en/2.13/reference/association-mapping.html#initializing-collections
+        $this->tags = new ArrayCollection([]);
+
+        $this->id = $id;
+        $this->title = $title;
+        $this->content = $content;
+        $this->tags = $tags;
+        $this->postedAt = CarbonImmutable::now();
+        $this->updatedAt = CarbonImmutable::now();
     }
 }

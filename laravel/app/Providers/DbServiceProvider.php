@@ -2,13 +2,16 @@
 
 namespace App\Providers;
 
+use Carbon\Doctrine\CarbonImmutableType;
 use Doctrine\DBAL\Types\Type;
 use Doctrine\ORM\Configuration;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\ORMSetup;
 use Illuminate\Support\ServiceProvider;
+use Mapping\HtmlType;
 use Mapping\PostIdType;
+use Mapping\TagIdType;
 
 class DbServiceProvider extends ServiceProvider
 {
@@ -42,6 +45,9 @@ class DbServiceProvider extends ServiceProvider
     {
         // Doctrineのカスタムタイプを登録する
         // See also: https://www.doctrine-project.org/projects/doctrine-orm/en/2.8/cookbook/custom-mapping-types.html
+        Type::addType('carbon_immutable', CarbonImmutableType::class);
+        Type::addType('html', HtmlType::class);
         Type::addType('post_id', PostIdType::class);
+        Type::addType('tag_id', TagIdType::class);
     }
 }

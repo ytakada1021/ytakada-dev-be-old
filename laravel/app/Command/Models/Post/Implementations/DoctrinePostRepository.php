@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Command\Models\Post\Implementations;
 
-use App\Command\Models\Post\{Id, Post, PostRepository};
+use App\Command\Models\Post\{Post, PostId, PostRepository};
 use Carbon\CarbonImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -17,7 +17,7 @@ final class DoctrinePostRepository implements PostRepository
         $this->entityManager = $entityManager;
     }
 
-    public function postOfId(Id $postId): ?Post
+    public function postOfId(PostId $postId): ?Post
     {
         return $this->entityManager->find(Post::class, $postId);
     }
@@ -31,7 +31,7 @@ final class DoctrinePostRepository implements PostRepository
     /**
      *
      */
-    public function delete(Id $postId): void
+    public function delete(PostId $postId): void
     {
         if (is_null($this->postOfId($postId))) {
             return;

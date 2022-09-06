@@ -6,7 +6,7 @@ namespace App\Command\Models\Post;
 
 use Util\Assert;
 
-final class Title
+final class PostTitle
 {
     private readonly string $value;
 

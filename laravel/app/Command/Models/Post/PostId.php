@@ -7,7 +7,7 @@ namespace App\Command\Models\Post;
 use Stringable;
 use Util\Assert;
 
-final class Id implements Stringable
+final class PostId implements Stringable
 {
     private readonly string $value;
 

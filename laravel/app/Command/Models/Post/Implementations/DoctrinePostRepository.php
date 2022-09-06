@@ -28,25 +28,13 @@ final class DoctrinePostRepository implements PostRepository
         $this->entityManager->flush();
     }
 
-    /**
-     *
-     */
     public function delete(PostId $postId): void
     {
-        if (is_null($this->postOfId($postId))) {
-            return;
-        } else {
-            $this
-                ->entityManager
-                ->getConnection()
-                ->update(
-                    table: 'posts',
-                    data: [
-                        'deleted_at',
-                        CarbonImmutable::now()->toDateTimeString('microsecond')
-                    ],
-                    criteria: ['id', $postId->value()]
-                );
+        /** @var ?Post $post */
+        $post = $this->postOfId($postId);
+
+        if (!is_null($post)) {
+            $this->entityManager->remove($post);
         }
     }
 }

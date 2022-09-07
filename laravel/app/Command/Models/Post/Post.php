@@ -80,7 +80,7 @@ final class Post
             );
         }
 
-        $this->updateTitle($frontMatter['title']);
+        $this->updateTitle(new PostTitle($frontMatter['title']));
         $this->updateContent(new PostContent($converter->convertToHtml($markdown)));
     }
 

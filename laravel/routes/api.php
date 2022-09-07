@@ -23,7 +23,7 @@ Route::get('/health', function () {
 
 Route::prefix('/posts')->group(function () {
     Route::get('/', GetPostListController::class);
-    Route::post('/', CreateOrUpdatePostController::class);
+    Route::post('/', CreateOrUpdatePostController::class)->middleware('apikey');
     Route::get('/{postId}', GetPostController::class);
-    Route::delete('/{postId}', DeletePostController::class);
+    Route::delete('/{postId}', DeletePostController::class)->middleware('apikey');
 });

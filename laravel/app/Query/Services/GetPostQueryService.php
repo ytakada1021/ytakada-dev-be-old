@@ -4,59 +4,41 @@ declare(strict_types=1);
 
 namespace App\Query\Services;
 
+use App\Http\Models\DefaultPost;
 use Carbon\CarbonImmutable;
-use Illuminate\Database\ConnectionInterface;
-use Illuminate\Database\DatabaseManager;
-use Illuminate\Support\Collection;
+use Illuminate\Database\ConnectionResolverInterface;
 use stdClass;
 
 final class GetPostQueryService
 {
-    private DatabaseManager $dbManager;
+    public function __construct(private ConnectionResolverInterface $connectionResolver) {}
 
-    public function __construct(DatabaseManager $dbManager)
+    public function getPostOfId(string $postId): ?DefaultPost
     {
-        $this->dbManager = $dbManager;
-    }
-
-    public function getPostOfId(string $postId): ?stdClass
-    {
-        /** @var Collection $queryResult */
+        /** @var ?stdClass */
         $queryResult = $this
-            ->dbConnection()
+            ->connectionResolver
+            ->connection()
             ->table('posts')
             ->select('*')
             ->where('posts.id', $postId)
-            ->whereNull('posts.deleted_at')
-            ->leftJoin('tags', 'posts.id', '=', 'tags.post_id')
-            ->get();
+            ->first();
 
-        if ($queryResult->isEmpty()) {
+        if (is_null($queryResult)) {
             return null;
         } else {
-            return $this->convertQueryResultToApiResponseModel($queryResult);
+            return $this->convertQueryResultToApiModel($queryResult);
         }
     }
 
-    private function convertQueryResultToApiResponseModel(Collection $queryResult): stdClass
+    private function convertQueryResultToApiModel(stdClass $queryResult): DefaultPost
     {
-        /** @var stdClass $firstResult */
-        $firstResult = $queryResult->first();
-
-        $post = new stdClass();
-        $post->id = $firstResult->id;
-        $post->title = $firstResult->title;
-        $post->content = $firstResult->content;
-        $post->posted_at = new CarbonImmutable($firstResult->posted_at);
-        $post->update_at = new CarbonImmutable($firstResult->updated_at);
-
-        $post->tags = $queryResult->pluck(['name'])->whereNotNull();
-
-        return $post;
-    }
-
-    private function dbConnection(): ConnectionInterface
-    {
-        return $this->dbManager->connection();
+        return new DefaultPost(
+            $queryResult->id,
+            $queryResult->title,
+            $queryResult->content,
+            CarbonImmutable::parse($queryResult->posted_at)->toIso8601String(),
+            CarbonImmutable::parse($queryResult->updated_at)->toIso8601String()
+        );
     }
 }

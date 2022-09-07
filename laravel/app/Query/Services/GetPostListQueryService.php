@@ -4,68 +4,47 @@ declare(strict_types=1);
 
 namespace App\Query\Services;
 
-use Illuminate\Database\ConnectionInterface;
-use Illuminate\Database\DatabaseManager;
+use App\Http\Models\DefaultPost;
+use Carbon\CarbonImmutable;
+use Illuminate\Database\ConnectionResolverInterface;
 use Illuminate\Support\Collection;
 use stdClass;
 
 final class GetPostListQueryService
 {
-    private DatabaseManager $dbManager;
-
-    public function __construct(DatabaseManager $dbManager)
-    {
-        $this->dbManager = $dbManager;
-    }
+    public function __construct(private ConnectionResolverInterface $connectionResolver) {}
 
     public function getPostListOfPage(int $pageNumber = 1, int $perPage = 10): Collection
     {
         /** @var int $offset */
         $offset = ($pageNumber - 1) * $perPage;
 
-        /** @var Collection $postsQueryResult */
-        $postsQueryResult = $this
-            ->dbConnection()
+        /** @var Collection $queryResult */
+        $queryResult = $this
+            ->connectionResolver
+            ->connection()
             ->table('posts')
-            ->select([
-                'posts.id',
-                'posts.title',
-                'posts.posted_at',
-                'posts.updated_at'
-            ])
-            ->whereNull('posts.deleted_at')
+            ->select(['*'])
             ->orderBy('posted_at', 'desc')
             ->offset($offset)
             ->limit($perPage)
             ->get();
 
-        /** @var Collection $tagsQueryResult */
-        $tagsQueryResult = $this
-            ->dbConnection()
-            ->table('tags')
-            ->select('tags.*')
-            ->whereIn('tags.post_id', $postsQueryResult->pluck('id'))
-            ->get();
-
-        return $this->convertQueryResultToApiResponseModel($postsQueryResult, $tagsQueryResult);
+        return $this->convertQueryResultToApiModel($queryResult);
     }
 
-    private function convertQueryResultToApiResponseModel(
-        Collection $postsQueryResult,
-        Collection $tagsQueryResult
-    ): Collection
+    private function convertQueryResultToApiModel(Collection $queryResult): Collection
     {
-        return $postsQueryResult->map(function (stdClass $post) use ($tagsQueryResult): stdClass {
-            $post->tags = $tagsQueryResult
-                ->whereStrict('post_id', $post->id)
-                ->pluck('name');
-
-            return $post;
-        });
-    }
-
-    private function dbConnection(): ConnectionInterface
-    {
-        return $this->dbManager->connection();
+        return $queryResult->map(
+            function (stdClass $row): DefaultPost {
+                return new DefaultPost(
+                    $row->id,
+                    $row->title,
+                    $row->content,
+                    CarbonImmutable::parse($row->posted_at)->toIso8601String(),
+                    CarbonImmutable::parse($row->updated_at)->toIso8601String()
+                );
+            }
+        );
     }
 }

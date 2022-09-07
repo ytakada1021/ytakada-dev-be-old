@@ -15,22 +15,11 @@ use Throwable;
 
 final class CreateOrUpdatePostAppService
 {
-    private readonly PostRepository $postRepository;
-
-    private readonly MarkdownConverter $markdownConverter;
-
-    private readonly EntityManagerInterface $entityManager;
-
     public function __construct(
-        PostRepository $postRepository,
-        MarkdownConverter $markdownConverter,
-        EntityManagerInterface $entityManager
-    )
-    {
-        $this->postRepository = $postRepository;
-        $this->markdownConverter = $markdownConverter;
-        $this->entityManager = $entityManager;
-    }
+        private PostRepository $postRepository,
+        private MarkdownConverter $markdownConverter,
+        private EntityManagerInterface $entityManager
+    ) {}
 
     /**
      * 記事IDに該当する記事が存在しない場合は新規作成し, すでに存在する場合は更新する.
@@ -44,7 +33,7 @@ final class CreateOrUpdatePostAppService
         $this->entityManager->beginTransaction();
 
         try {
-            $postId = new PostId($input->postId());
+            $postId = new PostId($input->postId);
 
             /** @var ?Post $postOrNull */
             $postOrNull = $this->postRepository->postOfId($postId);
@@ -55,8 +44,8 @@ final class CreateOrUpdatePostAppService
             if (is_null($postOrNull)) {
                 $post = Post::createFromMarkdown(
                     $this->markdownConverter,
-                    new PostId($input->postId()),
-                    $input->markdownText()
+                    new PostId($input->postId),
+                    $input->markdownText
                 );
 
             } else {
@@ -64,7 +53,7 @@ final class CreateOrUpdatePostAppService
 
                 $post->updateFromMarkdown(
                     $this->markdownConverter,
-                    $input->markdownText()
+                    $input->markdownText
                 );
             }
 
@@ -85,23 +74,11 @@ namespace App\Command\Services\Post\CreatePostApplicationService;
 
 final class Input
 {
-    private readonly string $postId;
-
-    private readonly string $markdownText;
-
-    public function __construct(string $postId, string $markdownText)
-    {
+    public function __construct(
+        public readonly string $postId,
+        public readonly string $markdownText
+    ) {
         $this->postId = $postId;
         $this->markdownText = $markdownText;
-    }
-
-    public function postId(): string
-    {
-        return $this->postId;
-    }
-
-    public function markdownText(): string
-    {
-        return $this->markdownText;
     }
 }

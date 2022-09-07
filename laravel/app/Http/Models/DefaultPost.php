@@ -11,9 +11,9 @@ class DefaultPost
     public static function createFromDomainModel(Post $domainModel): self
     {
         return new self(
-            $domainModel->id()->value(),
-            $domainModel->title()->value(),
-            $domainModel->content()->value()->value(),
+            $domainModel->id()->value,
+            $domainModel->title()->value,
+            $domainModel->content()->value->value,
             $domainModel->postedAt()->toIso8601String(),
             $domainModel->updatedAt()->toIso8601String()
         );

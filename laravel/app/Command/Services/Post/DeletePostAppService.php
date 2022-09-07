@@ -12,24 +12,17 @@ use Throwable;
 
 final class DeletePostAppService
 {
-    private readonly PostRepository $postRepository;
-
-    private readonly EntityManagerInterface $entityManager;
-
     public function __construct(
-        PostRepository $postRepository,
-        EntityManagerInterface $entityManager
-    ) {
-        $this->postRepository = $postRepository;
-        $this->entityManager = $entityManager;
-    }
+        private PostRepository $postRepository,
+        private EntityManagerInterface $entityManager
+    ) {}
 
     public function execute(Input $input): void
     {
         $this->entityManager->beginTransaction();
 
         try {
-            $this->postRepository->delete(new PostId($input->postId()));
+            $this->postRepository->delete(new PostId($input->postId));
 
             $this->entityManager->commit();
         } catch (Throwable $th) {
@@ -43,15 +36,5 @@ namespace App\Command\Services\Post\DeletePostAppService;
 
 final class Input
 {
-    private readonly string $postId;
-
-    public function __construct(string $postId)
-    {
-        $this->postId = $postId;
-    }
-
-    public function postId(): string
-    {
-        return $this->postId;
-    }
+    public function __construct(public readonly string $postId) {}
 }

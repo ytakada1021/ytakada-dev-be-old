@@ -8,15 +8,8 @@ use App\Command\Models\Common\Html;
 
 final class PostContent
 {
-    private readonly Html $value;
-
-    public function __construct(Html $value)
+    public function __construct(public readonly Html $value)
     {
         $this->value = $value;
-    }
-
-    public function value(): Html
-    {
-        return $this->value;
     }
 }

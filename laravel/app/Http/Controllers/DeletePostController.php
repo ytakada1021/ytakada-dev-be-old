@@ -10,12 +10,7 @@ use Illuminate\Http\JsonResponse;
 
 final class DeletePostController extends Controller
 {
-    private DeletePostAppService $appService;
-
-    public function __construct(DeletePostAppService $appService)
-    {
-        $this->appService = $appService;
-    }
+    public function __construct(private DeletePostAppService $appService) {}
 
     public function __invoke(string $postId): JsonResponse
     {

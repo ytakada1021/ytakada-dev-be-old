@@ -8,16 +8,9 @@ use Util\Assert;
 
 final class PostTitle
 {
-    private readonly string $value;
-
-    public function __construct(string $value)
+    public function __construct(public readonly string $value)
     {
         Assert::notEmpty($value, 'Argument cannot be empty string.');
         $this->value = $value;
-    }
-
-    public function value(): string
-    {
-        return $this->value;
     }
 }

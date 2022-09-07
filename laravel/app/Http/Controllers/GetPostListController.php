@@ -9,12 +9,7 @@ use Illuminate\Support\Collection;
 
 final class GetPostListController extends Controller
 {
-    private GetPostListQueryService $queryService;
-
-    public function __construct(GetPostListQueryService $queryService)
-    {
-        $this->queryService = $queryService;
-    }
+    public function __construct(private GetPostListQueryService $queryService) {}
 
     public function __invoke(Request $request): JsonResponse
     {

@@ -8,6 +8,13 @@ use InvalidArgumentException;
 
 final class Assert
 {
+    public static function notNull(mixed $arg, string $message): void
+    {
+        if (is_null($arg)) {
+            throw new InvalidArgumentException($message);
+        }
+    }
+
     public static function notEmpty(string $str, string $message): void
     {
         if (StringUtil::mbTrim($str) === '') {

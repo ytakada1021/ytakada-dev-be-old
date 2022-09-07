@@ -22,7 +22,7 @@ final class HtmlType extends Type
         if (is_null($value)) {
             return null;
         } else {
-            return $value->value();
+            return $value->value;
         }
     }
 

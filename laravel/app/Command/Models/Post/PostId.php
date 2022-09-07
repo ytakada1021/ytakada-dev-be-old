@@ -12,7 +12,9 @@ final class PostId implements Stringable
     // 半角英数, -, _を含む50文字以内の文字列
     public const FORMAT = '/\A[0-9a-zA-Z\-\_]{1,50}\z/u';
 
-    public function __construct(public readonly string $value)
+    public readonly string $value;
+
+    public function __construct(string $value)
     {
         Assert::notEmpty($value, 'Argument cannot be empty string.');
         $this->value = $value;

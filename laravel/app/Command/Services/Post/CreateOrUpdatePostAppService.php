@@ -77,8 +77,5 @@ final class Input
     public function __construct(
         public readonly string $postId,
         public readonly string $markdownText
-    ) {
-        $this->postId = $postId;
-        $this->markdownText = $markdownText;
-    }
+    ) {}
 }

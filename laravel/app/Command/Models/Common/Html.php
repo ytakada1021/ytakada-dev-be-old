@@ -9,11 +9,13 @@ use DOMDocument;
 
 final class Html
 {
+    public readonly string $value;
+
     /**
      * @param string $value
      * @throws InvalidHtmlFormatException
      */
-    public function __construct(public readonly string $value)
+    public function __construct(string $value)
     {
         $this->checkHtmlFormat($value);
         $this->value = $value;

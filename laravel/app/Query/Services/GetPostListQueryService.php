@@ -42,7 +42,9 @@ final class GetPostListQueryService
                     $row->title,
                     $row->content,
                     CarbonImmutable::parse($row->posted_at)->toIso8601String(),
-                    CarbonImmutable::parse($row->updated_at)->toIso8601String()
+                    is_null($row->updated_at)
+                        ? null
+                        : CarbonImmutable::parse($row->updated_at)->toIso8601String()
                 );
             }
         );

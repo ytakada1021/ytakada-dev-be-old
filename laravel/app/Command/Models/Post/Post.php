@@ -22,7 +22,7 @@ final class Post
     private PostTitle $title;
     private PostContent $content;
     private CarbonImmutable $postedAt;
-    private CarbonImmutable $updatedAt;
+    private ?CarbonImmutable $updatedAt;
 
     /**
      * 以下フォーマットのマークダウンテキストからPostインスタンスを生成する.
@@ -124,7 +124,7 @@ final class Post
         return $this->postedAt;
     }
 
-    public function updatedAt(): CarbonImmutable
+    public function updatedAt(): ?CarbonImmutable
     {
         return $this->updatedAt;
     }
@@ -135,7 +135,7 @@ final class Post
         $this->title = $title;
         $this->content = $content;
         $this->postedAt = CarbonImmutable::now();
-        $this->updatedAt = CarbonImmutable::now();
+        $this->updatedAt = null;
     }
 
     private function reflectToUpdatedAt(): void

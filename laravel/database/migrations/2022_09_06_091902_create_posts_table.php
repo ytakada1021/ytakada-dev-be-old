@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('title', 191);
             $table->mediumText('content');
             $table->dateTime('posted_at', 6);
-            $table->dateTime('updated_at', 6);
+            $table->dateTime('updated_at', 6)->nullable();
         });
         DB::statement('ALTER TABLE `posts` ADD FULLTEXT (`title`) WITH PARSER ngram');
     }

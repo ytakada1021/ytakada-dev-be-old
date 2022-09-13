@@ -15,7 +15,7 @@ class DefaultPost
             $domainModel->title()->value,
             $domainModel->content()->value->value,
             $domainModel->postedAt()->toIso8601String(),
-            $domainModel->updatedAt()->toIso8601String()
+            $domainModel->updatedAt()?->toIso8601String()
         );
     }
 
@@ -24,6 +24,6 @@ class DefaultPost
         public readonly string $title,
         public readonly string $content,
         public readonly string $posted_at,
-        public readonly string $updated_at
+        public readonly ?string $updated_at
     ) {}
 }

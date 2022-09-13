@@ -38,7 +38,9 @@ final class GetPostQueryService
             $queryResult->title,
             $queryResult->content,
             CarbonImmutable::parse($queryResult->posted_at)->toIso8601String(),
-            CarbonImmutable::parse($queryResult->updated_at)->toIso8601String()
+            is_null($queryResult->updated_at)
+                ? null
+                : CarbonImmutable::parse($queryResult->updated_at)->toIso8601String()
         );
     }
 }
